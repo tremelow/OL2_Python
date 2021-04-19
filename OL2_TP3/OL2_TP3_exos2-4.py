@@ -1,61 +1,27 @@
-from numpy import *
-from matplotlib.pyplot import *
+from integrate import * # module local (l'autre fichier)
+from numpy import sqrt, pi # module installé (numpy)
 
 def f(t):
     return sqrt(1 - t**2)
 
-def rectangles(N):
-    h = 1/N
-    t = arange(0,1+h,h)
-    # arange(a,b,h) fait une discrétisation de [a,b[ avec un pas h
 
-    I = 0
-    for ti in t:
-        I += f(ti)
-    I *= h
+t0, tN = 0, 1
+tab_N = [10,20,50,100,200,300]
+I_rect = [0 for _ in tab_N]
+I_trap = [0 for _ in tab_N]
+I_simp = [0 for _ in tab_N]
 
-    # Avec sum :
-    I = h*sum(f(t))
+for (i,N) in enumerate(tab_N):
+    I_rect[i] = rectangles(f, t0, tN, N)
+    I_trap[i] = trapezes(f, t0, tN, N)
+    I_simp[i] = simpson(f, t0, tN, N)
 
-    return I
 
-def trapezes(N):
-    h = 1/N
-    t = arange(0,1+h,h)
-
-    I = 0
-    for i in range(N):
-        I += f(t[i]) + f(t[i+1])
-    I *= 0.5*h
-
-    # Avec sum :
-    I = h*sum(f(t)) - 0.5*h * (f(t[0]) + f(t[-1]))
-
-    return I
-
-def simpson(N):
-    h = 1/N
-    t = arange(0,1+h,h)
-
-    I = 0
-    for i in range(N):
-        tm = 0.5 * (t[i] + t[i+1])
-        I += f(t[i]) + f(t[i+1]) + 4*f(tm)
-    I *= h/6
-
-    # Avec sum :
-    tm = 0.5 * (t[1:] + t[:-1])
-    I  = h/3 * sum(f(t)) + 2*h/3 * sum(f(tm))
-    I -= h/6 * (f(t[0]) + f(t[-1]))
-
-    return I
-
-Iex = pi/4
-N = 20
-I1 = rectangles(N)
-I2 = trapezes(N)
-I3 = simpson(N)
-
-print("Erreur rectangles : " + str(abs(Iex - I1)))
-print("Erreur trapezes : " + str(abs(Iex - I2)))
-print("Erreur Simpson : " + str(abs(Iex - I3)))
+print("   N  :    ", end="")
+print(*[" %3d     " % N for N in tab_N], sep="")
+print("Rect. :    ", end="")
+print(*["%1.3f    " % I_N for I_N in I_rect], sep="")
+print("Trap. :    ", end="")
+print(*["%1.3f    " % I_N for I_N in I_trap], sep="")
+print("Simp. :    ", end="")
+print(*["%1.3f    " % I_N for I_N in I_simp], sep="")
