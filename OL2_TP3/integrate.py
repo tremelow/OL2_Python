@@ -9,11 +9,8 @@ entrée vectorielle.
 """
 def rectangles(f, a, b, N):
     h = (b-a)/N
-    t = concatenate((arange(a,b,h), [b]))
+    t = arange(a,b,h)
     # arange(a,b,h) fait une discrétisation de [a,b[ avec un pas h
-    # (on pourrait faire `arange(a,b+h,h)` mais j'ai eu des problèmes
-    # d'arrondis qui faisaient dépasser b...)
-    # Sinon, `linspace(a,b,N+1)` fonctionne, si on importe linspace
 
     I = 0
     for ti in t:
@@ -30,6 +27,9 @@ def rectangles(f, a, b, N):
 def trapezes(f, a, b, N):
     h = (b-a)/N
     t = concatenate((arange(a,b,h), [b]))
+    # (on pourrait faire `arange(a,b+h,h)` mais j'ai eu des problèmes
+    # d'arrondis qui faisaient dépasser b...)
+    # Sinon, `linspace(a,b,N+1)` fonctionne, si on importe linspace
 
     I = 0
     for i in range(N):
